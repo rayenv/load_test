@@ -20,6 +20,7 @@
 #   export URL_1="http://my-service-a/api/" URL_2="http://my-service-b/api/"
 #   export TARGET_POD="nginx-pod" COMPONENT="nginx" NAMESPACE="default"
 #   ./check.sh --time 1m --rps 100 --quiet
+# Ближе к концу скрипта находится контроль нагрузки создаваемый через stress-ng
 # ==================
 
 # === Проверка наличия необходимых утилит ===
@@ -300,7 +301,8 @@ cleanup() {
 trap cleanup EXIT
 
 # === Запуск stress-ng ===
-STRESS_CMD="stress-ng --cpu 10 --cpu-method matrixprod --vm 4 --vm-bytes 9G --vm-keep --metrics --timeout"
+# === в 1й строчке выставляется уровень нагрузки на хост ===
+STRESS_CMD="stress-ng --cpu 10 --cpu-method matrixprod --vm 4 --vm-bytes 6G --vm-keep --metrics --timeout"
 log "Запуск нагрузки: $STRESS_CMD $MONITOR_TIME"
 $STRESS_CMD "$MONITOR_TIME" &
 stress_pid=$!

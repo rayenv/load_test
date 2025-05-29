@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Тест политик безопасности</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Тест политик безопасности</h1>
+        <form id="test-form">
+            <label>URL 1: <input type="text" name="url1" value="http://10.213.22.39:81/"></label><br>
+            <label>URL 2: <input type="text" name="url2" value="http://10.213.22.40/"></label><br>
+            <label>RPS: <input type="number" name="rps" value="50"></label><br>
+            <label>Время тестирования: <input type="text" name="duration" value="1m"></label><br>
+            <label>Pod: <input type="text" name="pod" placeholder="nginx-pod"></label><br>
+            <label>Namespace: <input type="text" name="namespace" placeholder="default"></label><br>
+            <label>Component: <input type="text" name="component" placeholder="nginx"></label><br>
+
+            <button type="submit">🚀 Запустить</button>
+            <pre id="log-output"></pre>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('test-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const data = {};
+            for (const [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+
+            fetch('/start', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            }).then(res => res.text()).then(log => {
+                document.getElementById('log-output').innerText = log;
+            });
+        });
+    </script>
+</body>
+</html>
